@@ -1,7 +1,9 @@
 package com.example.helloworld.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import com.example.helloworld.core.User;
 import com.example.helloworld.jdbi.UserDAO;
+import io.dropwizard.auth.Auth;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -21,7 +23,7 @@ public class UserResource {
 
     @GET
     @Timed
-    public String findNameById(@PathParam("personId") Integer id) {
+    public String findNameById(@Auth User user,  @PathParam("personId") Integer id) {
         final String userName = userDAO.findNameById(id);
         if (userName.isEmpty()) {
             throw new NotFoundException("No such user.");

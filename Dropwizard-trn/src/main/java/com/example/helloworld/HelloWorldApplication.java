@@ -1,10 +1,18 @@
 package com.example.helloworld;
 
+import com.example.helloworld.auth.SimpleAuthenticator;
+import com.example.helloworld.core.User;
 import com.example.helloworld.health.TemplateHealthCheck;
 import com.example.helloworld.jdbi.UserDAO;
 import com.example.helloworld.resources.HelloWorldResource;
 import com.example.helloworld.resources.UserResource;
+import com.google.common.base.Optional;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthFactory;
+import io.dropwizard.auth.AuthenticationException;
+import io.dropwizard.auth.Authenticator;
+import io.dropwizard.auth.basic.BasicAuthFactory;
+import io.dropwizard.auth.basic.BasicCredentials;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -28,6 +36,11 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
     @Override
     public void run(HelloWorldConfiguration configuration,
                     Environment environment) {
+
+        environment.jersey().register(AuthFactory.binder(new BasicAuthFactory<String>(new SimpleAuthenticator(),
+                "secret",
+                String.class)));
+
         final HelloWorldResource resource = new HelloWorldResource(
                 configuration.getTemplate(),
                 configuration.getDefaultName()

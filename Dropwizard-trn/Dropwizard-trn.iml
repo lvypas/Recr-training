@@ -95,6 +95,7 @@
     <orderEntry type="library" name="Maven: org.jdbi:jdbi:2.59" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard.metrics:metrics-jdbi:3.1.1" level="project" />
     <orderEntry type="library" name="Maven: postgresql:postgresql:9.0-801.jdbc4" level="project" />
+    <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-auth:0.8.2" level="project" />
   </component>
 </module>
 
