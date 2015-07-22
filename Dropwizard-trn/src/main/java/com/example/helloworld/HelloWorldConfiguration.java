@@ -44,4 +44,8 @@ public class HelloWorldConfiguration extends Configuration {
         return database;
     }
 
+    public void setDatabase(DataSourceFactory database) {
+        this.database = database;
+    }
+
 }
