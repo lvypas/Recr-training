@@ -5,6 +5,7 @@ import com.example.helloworld.core.User;
 import com.example.helloworld.jdbi.UserDAO;
 import io.dropwizard.auth.Auth;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
@@ -21,6 +22,7 @@ public class UserResource {
         this.userDAO = userDAO ;
     }
 
+    @PermitAll
     @GET
     @Timed
     public String findNameById(@Auth User user,  @PathParam("personId") Integer id) {
