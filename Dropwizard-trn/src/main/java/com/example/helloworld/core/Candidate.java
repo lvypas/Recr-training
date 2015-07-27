@@ -3,10 +3,10 @@ package com.example.helloworld.core;
 
 import java.security.Principal;
 
-public class User implements Principal {
+public class Candidate implements Principal {
     private final String name;
 
-    public User(String name) {
+    public Candidate(String name) {
         this.name = name;
     }
 
