@@ -1,15 +1,17 @@
 package recr.parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
     String jobDescription = "Responsibilities:\n" +
-            "Participate in one or more SoftwareDevelopment projects, working in a team of 3 to 10 developers\n" +
+            "Participate in one or more SoftwareDevelopment CreateCode projects, working in a team of 3 to 10 developers\n" +
             "DevelopCode and debug program code, design system architecture, research into newest software technologies and development tools as well as project domain\n" +
-            "Take part in DevelopCode project activities: requirements analysis, release building, code review\n" +
+            "Take part in DevelopCode project activities: requirements WriteCode analysis, release building, code review\n" +
             "Requirements:\n" +
             "BS/MS degree in Computer Science\n" +
             "3+ years of software development in commercial projects\n" +
@@ -54,7 +56,31 @@ public class Parser {
         while (m.find()){
             count +=1;
         }
+        // find synonyms
+        for(Synonyms sn: getRelatedSynonyms(keyword)) {
+            p = Pattern.compile(sn.name());
+            m = p.matcher(str);
+            while (m.find()){
+                count +=1;
+            }
+        }
         return  count;
+    }
+
+    private List<Synonyms> getRelatedSynonyms(Keywords keyword) {
+        List<Synonyms> synonymses = new ArrayList<Synonyms>();
+        for (Synonyms synonym : Synonyms.values()){
+            if (keyword.equals(synonym.getRelatedKeyword())) synonymses.add(synonym);
+        }
+        return  synonymses;
+    }
+
+    private List<Keywords> getRelatedKeywords(Sections section) {
+        List<Keywords> keywordses = new ArrayList<Keywords>();
+        for (Keywords keyword : Keywords.values()){
+            if (section.equals(keyword.getRelatedSection())) keywordses.add(keyword);
+        }
+        return  keywordses;
     }
 
 }

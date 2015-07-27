@@ -1,8 +1,5 @@
 package recr.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public enum  Keywords {
     SoftwareDevelopment(Sections.Responsibilities),
     DevelopCode(Sections.Responsibilities),
@@ -16,13 +13,5 @@ public enum  Keywords {
 
     public Sections getRelatedSection() {
         return  this.relatedSection;
-    }
-
-    public List<Sections> getRelatedSections(Sections section) {
-        List<Sections> sectionses = new ArrayList<Sections>();
-        for (Keywords keyword : Keywords.values()){
-            if (section.equals(keyword.getRelatedSection())) sectionses.add(section);
-        }
-        return  sectionses;
     }
 }
