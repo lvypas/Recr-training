@@ -1,9 +1,12 @@
 package recr.parser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,13 +42,20 @@ public class Parser {
 
 
     public void parseJobDescription(){
-        Map<Keywords, Integer> countKeywords = new HashMap<Keywords, Integer>();
+        Map<Keywords, Integer> countKeywords = new TreeMap<Keywords, Integer>();
         for (Keywords keyword: Keywords.values()){
                 countKeywords.put(keyword, countKeyword(keyword));
         }
-        for (Keywords kw: countKeywords.keySet()) {
-            System.out.println(kw.name() + ":" + countKeywords.get(kw).intValue());
+        for (Sections sect: Sections.values()) {
+            Integer topKeywords = sect.getTopKeywords();
+            for (Map.Entry<Keywords, Integer> entry  : entriesSortedByValuesDesc(countKeywords)) {
+                System.out.println(entry.getKey()+":"+entry.getValue());
+            }
         }
+
+        /*for (Keywords kw: countKeywords.keySet()) {
+            System.out.println(kw.name() + ":" + countKeywords.get(kw).intValue());
+        }*/
     }
 
     private Integer countKeyword(Keywords keyword) {
@@ -81,6 +91,19 @@ public class Parser {
             if (section.equals(keyword.getRelatedSection())) keywordses.add(keyword);
         }
         return  keywordses;
+    }
+
+    static <K,V extends Comparable<? super V>> SortedSet<Map.Entry<K,V>> entriesSortedByValuesDesc(Map<K,V> map) {
+        SortedSet<Map.Entry<K,V>> sortedEntries = new TreeSet<Map.Entry<K,V>>(
+                new Comparator<Map.Entry<K,V>>() {
+                    @Override public int compare(Map.Entry<K,V> e1, Map.Entry<K,V> e2) {
+                        int res = e2.getValue().compareTo(e1.getValue());
+                        return res != 0 ? res : 1; // Special fix to preserve items with equal values
+                    }
+                }
+        );
+        sortedEntries.addAll(map.entrySet());
+        return sortedEntries;
     }
 
 }
