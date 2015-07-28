@@ -1,5 +1,8 @@
 package recr.parser;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -11,64 +14,89 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    String jobDescription = "Responsibilities:\n" +
-            "Participate in one or more SoftwareDevelopment CreateCode projects, working in a team of 3 to 10 developers\n" +
-            "DevelopCode and debug program code, design system architecture, research into newest software technologies and development tools as well as project domain\n" +
-            "Take part in DevelopCode project activities: requirements WriteCode analysis, release building, code review\n" +
-            "Requirements:\n" +
-            "BS/MS degree in Computer Science\n" +
-            "3+ years of software development in commercial projects\n" +
-            "Solid knowledge of fundamental data structures and algorithms\n" +
-            "Good understanding of OOD/OOA principles\n" +
-            "Knowledge of design patterns, experience in system architecture development\n" +
-            "Knowledge of Java in scope of J2SE specification\n" +
-            "English: intermediate level or above, enough for reading/writing technical documentation\n" +
-            "Responsible, proactive, self-dependent person\n" +
-            "Good communication skills, readiness for teamwork\n" +
-            "Additional skills considered as an advantage:\n" +
-            "Experience in development of software for financial or brokerage business\n" +
-            "Understanding of parallel programming, experience in multithreaded application development\n" +
-            "Understanding of relational databases design, SQL knowledge, working experience with Oracle and MySQL\n" +
-            "Knowledge of 2 or more programming languages\n" +
-            "Knowledge of Unix-family OS\n" +
-            "Experience in development of distributed software systems with strong performance and reliability requirements\n" +
-            "Experience in GUI design\n" +
-            "Experience in Web and mobile application development\n" +
-            "Knowledge of newest Java development technologies, libraries and frameworks (Spring, Hibernate, Swing, GWT, etc.)\n" +
-            "Knowledge of methodologies and principles of application lifecycle management, experience with bug tracking, version control and requirements management systems";
-    Sections sections;
-    Keywords keywords;
-    Synonyms synonyms;
+    String fileName;
+    List<Section> sections;
+    List<Keyword> keywords;
+    List<Synonym> synonyms;
+
+    public Parser(String fileName) {
+        this.fileName = fileName;
+
+        // add sections
+        Section descriptionSection = new Section("Description", 2);
+        Section responsibilitySection = new Section("Responsibilities", 1);
+        Section requirementSection = new Section("Requirements", 3);
+
+        sections = new ArrayList<Section>();
+        sections.add(descriptionSection);
+        sections.add(responsibilitySection);
+        sections.add(requirementSection);
+
+        // add keywords
+        Keyword kw1 = new Keyword("looking", descriptionSection);
+        Keyword kw2 = new Keyword("talented", descriptionSection);
+        Keyword kw3 = new Keyword("company", descriptionSection);
+
+        Keyword kw4 = new Keyword("develop", responsibilitySection);
+        Keyword kw5 = new Keyword("project", responsibilitySection);
+
+        Keyword kw6 = new Keyword("degree", requirementSection);
+        Keyword kw7 = new Keyword("commercial", requirementSection);
+        Keyword kw8 = new Keyword("knowledge", requirementSection);
+        Keyword kw9 = new Keyword("principle", requirementSection);
+
+        keywords = new ArrayList<Keyword>();
+        keywords.add(kw1);
+        keywords.add(kw2);
+        keywords.add(kw3);
+        keywords.add(kw4);
+        keywords.add(kw5);
+        keywords.add(kw6);
+        keywords.add(kw7);
+        keywords.add(kw8);
+        keywords.add(kw9);
+
+        // add synonyms
+        Synonym sn1 = new Synonym("companies", kw3);
+        Synonym sn2 = new Synonym("development", kw4);
+        Synonym sn3 = new Synonym("learning", kw8);
+
+        synonyms = new ArrayList<Synonym>();
+        synonyms.add(sn1);
+        synonyms.add(sn2);
+        synonyms.add(sn3);
+
+    }
 
 
     public void parseJobDescription(){
-        Map<Keywords, Integer> countKeywords = new TreeMap<Keywords, Integer>();
-        for (Keywords keyword: Keywords.values()){
+        Map<Keyword, Integer> countKeywords = new TreeMap<Keyword, Integer>();
+        for (Keyword keyword: keywords){
                 countKeywords.put(keyword, countKeyword(keyword));
         }
-        for (Sections sect: Sections.values()) {
+        for (Section sect: sections) {
             Integer topKeywords = sect.getTopKeywords();
-            for (Map.Entry<Keywords, Integer> entry  : entriesSortedByValuesDesc(countKeywords)) {
+            for (Map.Entry<Keyword, Integer> entry  : entriesSortedByValuesDesc(countKeywords)) {
                 System.out.println(entry.getKey()+":"+entry.getValue());
             }
         }
 
-        /*for (Keywords kw: countKeywords.keySet()) {
+        /*for (Keyword kw: countKeywords.keySet()) {
             System.out.println(kw.name() + ":" + countKeywords.get(kw).intValue());
         }*/
     }
 
-    private Integer countKeyword(Keywords keyword) {
-        String str = jobDescription;
-        Pattern p = Pattern.compile(keyword.name());
+    private Integer countKeyword(Keyword keyword) {
+        String str = readFile(fileName);
+        Pattern p = Pattern.compile(keyword.getWord());
         Matcher m = p.matcher(str);
         int count = 0;
         while (m.find()){
             count +=1;
         }
-        // find synonyms
-        for(Synonyms sn: getRelatedSynonyms(keyword)) {
-            p = Pattern.compile(sn.name());
+        // find synonym
+        for(Synonym sn: getRelatedSynonyms(keyword)) {
+            p = Pattern.compile(sn.getWord());
             m = p.matcher(str);
             while (m.find()){
                 count +=1;
@@ -77,20 +105,41 @@ public class Parser {
         return  count;
     }
 
-    private List<Synonyms> getRelatedSynonyms(Keywords keyword) {
-        List<Synonyms> synonymses = new ArrayList<Synonyms>();
-        for (Synonyms synonym : Synonyms.values()){
-            if (keyword.equals(synonym.getRelatedKeyword())) synonymses.add(synonym);
+    private String readFile(String file) {
+        BufferedReader br = null;
+        StringBuffer result = new StringBuffer("");
+        try {
+            String sCurrentLine;
+            br = new BufferedReader(new FileReader(file));
+            while ((sCurrentLine = br.readLine()) != null) {
+                result.append(sCurrentLine);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) br.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
-        return  synonymses;
+        return result.toString();
     }
 
-    private List<Keywords> getRelatedKeywords(Sections section) {
-        List<Keywords> keywordses = new ArrayList<Keywords>();
-        for (Keywords keyword : Keywords.values()){
-            if (section.equals(keyword.getRelatedSection())) keywordses.add(keyword);
+    private List<Synonym> getRelatedSynonyms(Keyword keyword) {
+        List<Synonym> result = new ArrayList<Synonym>();
+        for (Synonym synonym : synonyms){
+            if (keyword.equals(synonym.getRelatedKeyword())) result.add(synonym);
         }
-        return  keywordses;
+        return  result;
+    }
+
+    private List<Keyword> getRelatedKeywords(Section section) {
+        List<Keyword> result = new ArrayList<Keyword>();
+        for (Keyword keyword : keywords){
+            if (section.equals(keyword.getRelatedSection())) result.add(keyword);
+        }
+        return  result;
     }
 
     static <K,V extends Comparable<? super V>> SortedSet<Map.Entry<K,V>> entriesSortedByValuesDesc(Map<K,V> map) {

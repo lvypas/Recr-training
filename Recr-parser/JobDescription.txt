@@ -1,0 +1,33 @@
+Description:
+One of Germany's leading engineering companies is looking for highly talented Java Engineers/Developers for their location in Hamburg. This company develops high end software for a leading German Automotive company.
+They will always promote from within wherever possible, and from a  senior position you can have the choice of going down the more technical lead route, or become more of a hands off manager.
+Great company culture driven by forward thinking and openness rarely found in companies these days.
+
+
+Responsibilities:
+Participate in one or more software development projects, working in a team of 3 to 10 developers
+Develop and debug program code, design system architecture, research into newest software technologies and development tools as well as project domain
+Take part in project activities: requirements analysis, release building, code review
+
+Requirements:
+BS/MS degree in Computer Science
+3+ years of software development in commercial projects
+Solid learning of fundamental data structures and algorithms
+Good understanding of OOD/OOA principles
+Knowledge of design patterns, experience in system architecture development
+Knowledge of Java in scope of J2SE specification
+English: intermediate level or above, enough for reading/writing technical documentation
+Responsible, proactive, self-dependent person
+Good communication skills, readiness for teamwork
+
+Additional skills considered as an advantage:
+Experience in development of software for financial or brokerage business
+Understanding of parallel programming, experience in multithreaded application development
+Understanding of relational databases design, SQL knowledge, working experience with Oracle and MySQL
+Knowledge of 2 or more programming languages
+Knowledge of Unix-family OS
+Experience in development of distributed software systems with strong performance and reliability requirements
+Experience in GUI design
+Experience in Web and mobile application development
+Knowledge of newest Java development technologies, libraries and frameworks (Spring, Hibernate, Swing, GWT, etc.)
+Knowledge of methodologies and principles of application lifecycle management, experience with bug tracking, version control and requirements management systems
