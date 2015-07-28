@@ -1,6 +1,6 @@
 package recr.parser;
 
-public class Keyword {
+public class Keyword implements Comparable<Keyword>{
     private String word;
     private Section relatedSection;
 
@@ -23,5 +23,10 @@ public class Keyword {
 
     public void setRelatedSection(Section relatedSection) {
         this.relatedSection = relatedSection;
+    }
+
+    @Override
+    public int compareTo(Keyword kw) {
+        return getWord().compareTo(kw.getWord());
     }
 }

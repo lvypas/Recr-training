@@ -75,20 +75,21 @@ public class Parser {
                 countKeywords.put(keyword, countKeyword(keyword));
         }
         for (Section sect: sections) {
+            System.out.println(sect.getName());
             Integer topKeywords = sect.getTopKeywords();
+            Integer numberKeywordsToShow = topKeywords;
             for (Map.Entry<Keyword, Integer> entry  : entriesSortedByValuesDesc(countKeywords)) {
-                System.out.println(entry.getKey()+":"+entry.getValue());
+                if (entry.getKey().getRelatedSection().equals(sect) && numberKeywordsToShow > 0){
+                    System.out.println(entry.getKey().getWord()+":"+entry.getValue());
+                    numberKeywordsToShow--;
+                }
             }
         }
-
-        /*for (Keyword kw: countKeywords.keySet()) {
-            System.out.println(kw.name() + ":" + countKeywords.get(kw).intValue());
-        }*/
     }
 
     private Integer countKeyword(Keyword keyword) {
         String str = readFile(fileName);
-        Pattern p = Pattern.compile(keyword.getWord());
+        Pattern p = Pattern.compile(keyword.getWord()/*, Pattern.CASE_INSENSITIVE*/);
         Matcher m = p.matcher(str);
         int count = 0;
         while (m.find()){
@@ -96,7 +97,7 @@ public class Parser {
         }
         // find synonym
         for(Synonym sn: getRelatedSynonyms(keyword)) {
-            p = Pattern.compile(sn.getWord());
+            p = Pattern.compile(sn.getWord()/*, Pattern.CASE_INSENSITIVE*/);
             m = p.matcher(str);
             while (m.find()){
                 count +=1;
@@ -153,6 +154,10 @@ public class Parser {
         );
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
+    }
+
+    private void printParsedJobDescription (ParsedJobDescription description) {
+        System.out.println(description.getKeyword() + " : " + description.getAmount() + " : " + description.getSentence());
     }
 
 }
