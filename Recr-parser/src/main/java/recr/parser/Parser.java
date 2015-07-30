@@ -5,10 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,9 +70,19 @@ public class Parser {
 
 
     public void parseJobDescription(){
-        Map<Keyword, Integer> countKeywords = new TreeMap<Keyword, Integer>();
+        // get sentences into array of strings
+        String[] sentences = getSentences(readFile(fileName));
+        // parse array of string and get only sentences with keywords. also count repeating for keywords
+        List<SentenceWithKeywords> sentencesWithKeywords = getSentencesWithKeywords(sentences);
+        // get map with keywords related section and sorted
+        List<ParsedJobDescription> parsedJobDescriptionList = getTotalCountKeywords(sentencesWithKeywords);
+        for (ParsedJobDescription parsedJobDescr: parsedJobDescriptionList) {
+            printParsedJobDescription(parsedJobDescr);
+        }
+
+        /*Map<Keyword, Integer> countKeywords = new TreeMap<Keyword, Integer>();
         for (Keyword keyword: keywords){
-                countKeywords.put(keyword, countKeyword(keyword));
+                countKeywords.put(keyword, countKeywordsInSentence(keyword));
         }
         for (Section sect: sections) {
             System.out.println(sect.getName());
@@ -80,25 +90,63 @@ public class Parser {
             Integer numberKeywordsToShow = topKeywords;
             for (Map.Entry<Keyword, Integer> entry  : entriesSortedByValuesDesc(countKeywords)) {
                 if (entry.getKey().getRelatedSection().equals(sect) && numberKeywordsToShow > 0){
-                    System.out.println(entry.getKey().getWord()+":"+entry.getValue());
+                    System.out.println(entry.getKey().getWord()+ " : " +entry.getValue());
                     numberKeywordsToShow--;
                 }
             }
-        }
+        }*/
     }
 
-    private Integer countKeyword(Keyword keyword) {
-        String str = readFile(fileName);
-        Pattern p = Pattern.compile(keyword.getWord()/*, Pattern.CASE_INSENSITIVE*/);
-        Matcher m = p.matcher(str);
+    private List<ParsedJobDescription> getTotalCountKeywords(List<SentenceWithKeywords> sentencesWithKeywords) {
+        List<ParsedJobDescription> listParsedJobDescription = new ArrayList<ParsedJobDescription>();
+        for (Keyword keyword: keywords) {
+            ParsedJobDescription parsedJobDescription = new ParsedJobDescription();
+            parsedJobDescription.setKeyword(keyword);
+            parsedJobDescription.setAmount(0);
+            for (SentenceWithKeywords sentenceWithKeywords: sentencesWithKeywords){
+                if (sentenceWithKeywords.getNumberRepeats().containsKey(keyword)) {
+                    Integer oldAmount = parsedJobDescription.getAmount();
+                    parsedJobDescription.setAmount(oldAmount + sentenceWithKeywords.getNumberRepeats().get(keyword).intValue() );
+                }
+            }
+        }
+        return listParsedJobDescription;
+    }
+
+    private List<SentenceWithKeywords> getSentencesWithKeywords(String[] sentences) {
+        List<SentenceWithKeywords> sentenceWithKeywordsList = new ArrayList<SentenceWithKeywords>();
+        for (String sentence: sentences) {
+            SentenceWithKeywords sentenceWithKeywords = new SentenceWithKeywords();
+            for (Keyword keyword: keywords) {
+                Integer countRepeats = countKeywordsInSentence(keyword, sentence);
+                if (countRepeats > 0) {
+                    sentenceWithKeywords.setSentence(sentence);
+                    Map<Keyword, Integer> keywordIntegerMap = new HashMap<Keyword, Integer>();
+                    keywordIntegerMap.put(keyword, countRepeats);
+                    sentenceWithKeywords.setNumberRepeats(keywordIntegerMap);
+                }
+            }
+            sentenceWithKeywordsList.add(sentenceWithKeywords);
+        }
+        return sentenceWithKeywordsList;
+    }
+
+    private String[] getSentences(String fileAsString){
+        String[] sentences = fileAsString.split("[\\.\\!\\?]");
+        return  sentences;
+    }
+
+    private Integer countKeywordsInSentence(Keyword keyword, String sentence) {
+        Pattern p = Pattern.compile(keyword.getWord(), Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(sentence);
         int count = 0;
         while (m.find()){
             count +=1;
         }
         // find synonym
         for(Synonym sn: getRelatedSynonyms(keyword)) {
-            p = Pattern.compile(sn.getWord()/*, Pattern.CASE_INSENSITIVE*/);
-            m = p.matcher(str);
+            p = Pattern.compile(sn.getWord(), Pattern.CASE_INSENSITIVE);
+            m = p.matcher(sentence);
             while (m.find()){
                 count +=1;
             }

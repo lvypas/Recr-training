@@ -5,12 +5,6 @@ public class ParsedJobDescription {
     private Integer amount;
     private String sentence;
 
-    public ParsedJobDescription(Keyword keyword, Integer amount, String sentence) {
-        this.keyword = keyword;
-        this.amount = amount;
-        this.sentence = sentence;
-    }
-
     public Keyword getKeyword() {
         return keyword;
     }
