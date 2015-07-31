@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -22,50 +23,31 @@ public class Parser {
     public Parser(String fileName) {
         this.fileName = fileName;
 
-        // add sections
-        Section descriptionSection = new Section("Description", 2);
-        Section responsibilitySection = new Section("Responsibilities", 1);
-        Section requirementSection = new Section("Requirements", 3);
-
-        sections = new ArrayList<Section>();
-        sections.add(descriptionSection);
-        sections.add(responsibilitySection);
-        sections.add(requirementSection);
+        // add synonyms
+        Synonym sn1 = new Synonym("companies");
+        Synonym sn2 = new Synonym("development");
+        Synonym sn3 = new Synonym("learning");
+        synonyms = Arrays.asList(sn1, sn2, sn3);
 
         // add keywords
-        Keyword kw1 = new Keyword("looking", descriptionSection);
-        Keyword kw2 = new Keyword("talented", descriptionSection);
-        Keyword kw3 = new Keyword("company", descriptionSection);
+        Keyword kw1 = new Keyword("looking", null);
+        Keyword kw2 = new Keyword("talented", null);
+        Keyword kw3 = new Keyword("company", Arrays.asList(sn1));
 
-        Keyword kw4 = new Keyword("develop", responsibilitySection);
-        Keyword kw5 = new Keyword("project", responsibilitySection);
+        Keyword kw4 = new Keyword("develop", Arrays.asList(sn2));
+        Keyword kw5 = new Keyword("project", null);
 
-        Keyword kw6 = new Keyword("degree", requirementSection);
-        Keyword kw7 = new Keyword("commercial", requirementSection);
-        Keyword kw8 = new Keyword("knowledge", requirementSection);
-        Keyword kw9 = new Keyword("principle", requirementSection);
+        Keyword kw6 = new Keyword("degree", null);
+        Keyword kw7 = new Keyword("commercial", null);
+        Keyword kw8 = new Keyword("knowledge", Arrays.asList(sn3));
+        Keyword kw9 = new Keyword("principle", null);
+        keywords = Arrays.asList(kw1, kw2, kw3, kw4, kw5, kw6, kw7, kw8, kw9);
 
-        keywords = new ArrayList<Keyword>();
-        keywords.add(kw1);
-        keywords.add(kw2);
-        keywords.add(kw3);
-        keywords.add(kw4);
-        keywords.add(kw5);
-        keywords.add(kw6);
-        keywords.add(kw7);
-        keywords.add(kw8);
-        keywords.add(kw9);
-
-        // add synonyms
-        Synonym sn1 = new Synonym("companies", kw3);
-        Synonym sn2 = new Synonym("development", kw4);
-        Synonym sn3 = new Synonym("learning", kw8);
-
-        synonyms = new ArrayList<Synonym>();
-        synonyms.add(sn1);
-        synonyms.add(sn2);
-        synonyms.add(sn3);
-
+        // add sections
+        Section descriptionSection = new Section("Description", 2, Arrays.asList(kw1, kw2, kw3));
+        Section responsibilitySection = new Section("Responsibilities", 1, Arrays.asList(kw4, kw5));
+        Section requirementSection = new Section("Requirements", 3, Arrays.asList(kw6, kw7, kw8, kw9));
+        sections = Arrays.asList(descriptionSection, requirementSection, requirementSection);
     }
 
 

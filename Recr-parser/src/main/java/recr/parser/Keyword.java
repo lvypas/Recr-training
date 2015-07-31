@@ -1,12 +1,14 @@
 package recr.parser;
 
-public class Keyword implements Comparable<Keyword>{
-    private String word;
-    private Section relatedSection;
+import java.util.List;
 
-    public Keyword(String word, Section relatedSection) {
+public class Keyword {
+    private String word;
+    private List<Synonym> listSynonyms;
+
+    public Keyword(String word, List<Synonym> listSynonyms) {
         this.word = word;
-        this.relatedSection = relatedSection;
+        this.listSynonyms = listSynonyms;
     }
 
     public String getWord() {
@@ -17,16 +19,11 @@ public class Keyword implements Comparable<Keyword>{
         this.word = word;
     }
 
-    public Section getRelatedSection() {
-        return relatedSection;
+    public List<Synonym> getListSynonyms() {
+        return listSynonyms;
     }
 
-    public void setRelatedSection(Section relatedSection) {
-        this.relatedSection = relatedSection;
-    }
-
-    @Override
-    public int compareTo(Keyword kw) {
-        return getWord().compareTo(kw.getWord());
+    public void setListSynonyms(List<Synonym> listSynonyms) {
+        this.listSynonyms = listSynonyms;
     }
 }
