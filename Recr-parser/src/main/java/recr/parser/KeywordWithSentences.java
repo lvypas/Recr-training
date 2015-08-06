@@ -2,7 +2,7 @@ package recr.parser;
 
 import java.util.List;
 
-public class KeywordWithSentences {
+public class KeywordWithSentences implements Comparable<KeywordWithSentences>{
     Keyword keyword;
     Integer count;
     List<Sentence> sentenceList;
@@ -29,5 +29,11 @@ public class KeywordWithSentences {
 
     public void setSentenceList(List<Sentence> sentenceList) {
         this.sentenceList = sentenceList;
+    }
+
+    @Override
+    public int compareTo(KeywordWithSentences keywordWithSentences) {
+        // asc
+        return getCount() - keywordWithSentences.getCount();
     }
 }

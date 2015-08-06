@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,30 +52,35 @@ public class Parser {
     public void parseJobDescription(){
         // get sentences into array of strings
         String[] sentences = getSentences(readFile(fileName));
-        // populate keyword with sentences multimap
+        // populate keyword with sentences object
         List<KeywordWithSentences> keywordWithSentencesList = new ArrayList<KeywordWithSentences>();
         for (Keyword keyword: keywords) {
             KeywordWithSentences keywordWithSentences = new KeywordWithSentences();
             keywordWithSentences.setKeyword(keyword);
             keywordWithSentences.setCount(0);
-            keywordWithSentences.setSentenceList(Arrays.asList());
+            List<Sentence> sentenceList = new ArrayList<Sentence>();
             for (String sentence: sentences) {
                 Integer count = countKeywordsInSentence(keyword, sentence);
                 keywordWithSentences.setCount(keywordWithSentences.getCount() + count);
-                keywordWithSentences.setSentenceList(Arr);
-
-
+                if (count > 0) sentenceList.add(new Sentence(sentence));
             }
-
+            keywordWithSentences.setSentenceList(sentenceList);
+            if (keywordWithSentences.getCount() > 0) keywordWithSentencesList.add(keywordWithSentences);
         }
+        // sort list by ascending
+        Collections.sort(keywordWithSentencesList);
 
+        //remove duplicated sentences that already reserved for another keyword
+        removeDuplicateSentences(keywordWithSentencesList);
 
+        // print results
+        printKeywordWithSentence(keywordWithSentencesList);
     }
 
     private String readFile(String file) {
         String content = null;
         try {
-            content = Files.toString(new File("JobDescription.txt"), Charsets.UTF_8);
+            content = Files.toString(new File(file), Charsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -107,25 +113,16 @@ public class Parser {
         return  count;
     }
 
-    /*private List<ParsedJobDescription> getTotalCountKeywords(List<SentenceWithKeywords> sentencesWithKeywords) {
-        List<ParsedJobDescription> listParsedJobDescription = new ArrayList<ParsedJobDescription>();
-        for (SentenceWithKeywords sentenceWithKeywords: sentencesWithKeywords){
-            for (Keyword keyword: keywords) {
-                ParsedJobDescription parsedJobDescription = new ParsedJobDescription();
-                parsedJobDescription.setKeyword(keyword);
-                parsedJobDescription.setAmount(0);
-                if (sentenceWithKeywords.getNumberRepeats().containsKey(keyword)) {
-                    Integer oldAmount = parsedJobDescription.getAmount();
-                    parsedJobDescription.setAmount(oldAmount + sentenceWithKeywords.getNumberRepeats().get(keyword).intValue() );
-                }
-                if (parsedJobDescription.getAmount() > 0) listParsedJobDescription.add(parsedJobDescription);
-            }
+    private void removeDuplicateSentences(List<KeywordWithSentences> keywordWithSentencesList) {
+        for (KeywordWithSentences keywordWithSentences: keywordWithSentencesList) {
+
         }
-        return listParsedJobDescription;
     }
 
-    private void printParsedJobDescription (ParsedJobDescription description) {
-        System.out.println(description.getKeyword().getWord() + " : " + description.getAmount() + " : " + description.getSentence());
-    }*/
-
+    private void printKeywordWithSentence (List<KeywordWithSentences> keywordWithSentencesList) {
+        for (KeywordWithSentences keywordWithSentences: keywordWithSentencesList) {
+            System.out.println(keywordWithSentences.getKeyword().getWord() + " : " + keywordWithSentences.getCount()
+                    + " : " + keywordWithSentences.getSentenceList().get(0).getText());
+        }
+    }
 }

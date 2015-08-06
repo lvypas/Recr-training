@@ -1,30 +1,31 @@
 Job summary:
-Swapster is a corporate venture backed by Deutsche Borse AG and built in close collaboration with Deloitte Digital Ventures. Together we will launch the first global, neutral, and regulated market for virtual in-game items as a service for publishers and gamers. The new marketplace will be operational later this year.
-Swapster, our independent, standardized and transparent global trading platform allows gamers to legally and safely trade in-game items and currencies so they can put value behind their passion. For publishers and game studios we offer full exchange market capabilities and additional gamer insights. Incorporating both, gamers and publishers, this leads to an enhanced gamer experience. The new marketplace will be operational later this year.
-Turn your ideas into reality and work alongside with international top finance experts, online professionals and top IT experts. We are all heavy online gamers!
-We want YOU as our Web Developer!
+One of Germany's leading engineering companies is looking for highly talented Java Engineers/Developers for their location in Hamburg. This company develops high end software for a leading German Automotive company.
+They will always promote from within wherever possible, and from a  senior position you can have the choice of going down the more technical lead route, or become more of a hands off manager.
+Great company culture driven by forward thinking and openness rarely found in companies these days.
 
 Responsibilities:
-You are responsible for the implementing and maintaining highly scalable application.
-You work in a small team of specialists who bootstrap our new Swapster platform.
-You work in a team environment, coordinate internal and external designers and match requirements with business/product development and product roadmap.
-You implement and enhance the application module, integrate code with the front-end development team.
-You take responsibility to ensure successful results.
-You stay on top of current industry trends.
+Participate in one or more software development projects, working in a team of 3 to 10 developers.
+Develop and debug program code, design system architecture, research into newest software technologies and development tools as well as project domain.
+Take part in project activities: requirements analysis, release building, code review.
+
 Requirements:
-You bring 2+ years of work experience within the field of web development.
-Good knowledge of web development technologies HTML/HTML5, CSS3, JavaScript,
-jQuery, AJAX.
-Experience in building enterprise highly efficient applications using PHP, Nodejs Nice to have.
-Experience in developing and consuming Web Services and RESTful API(s).
-Prior experience with source control tools such as Git, SVN, CVS Good to have.
-Experience in managing Apache application server with Nginx.
-Experience with relational database.
-Experience with load and performance testing tools.
-Prior experience with application server monitoring tools.
-Very good communication skills, high proficiency in English and German.
-You are currently located in Europe (EU).
-Disciplined approach to testing and quality assurance.
-Ability to work and communicate in a fast paced start-up environment.
-Entrepreneurial drive to create successful products.
-Our applicants are usually in the top of their academic or professional peer group.
+BS/MS degree in Computer Science.
+3+ years of software development in commercial projects.
+Solid learning of fundamental data structures and algorithms.
+Good understanding of OOD/OOA principles.
+Knowledge of design patterns, experience in system architecture development.
+Knowledge of Java in scope of J2SE specification.
+English: intermediate level or above, enough for reading/writing technical documentation.
+Responsible, proactive, self-dependent person.
+Good communication skills, readiness for teamwork.
+
+Experience in development of software for financial or brokerage business.
+Understanding of parallel programming, experience in multithreaded application development.
+Understanding of relational databases design, SQL knowledge, working experience with Oracle and MySQL.
+Knowledge of 2 or more programming languages.
+Knowledge of Unix-family OS.
+Experience in development of distributed software systems with strong performance and reliability requirements.
+Experience in GUI design.
+Experience in Web and mobile application development.
+Knowledge of newest Java development technologies, libraries and frameworks (Spring, Hibernate, Swing, GWT, etc.)
+Knowledge of methodologies and principles of application lifecycle management, experience with bug tracking, version control and requirements management systems.
