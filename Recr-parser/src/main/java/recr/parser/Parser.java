@@ -73,6 +73,8 @@ public class Parser {
         //remove duplicated sentences that already reserved for another keyword
         removeDuplicateSentences(keywordWithSentencesList);
 
+        Collections.reverse(keywordWithSentencesList);
+
         // print results
         printKeywordWithSentence(keywordWithSentencesList);
     }
@@ -113,8 +115,15 @@ public class Parser {
         return  count;
     }
 
+    private void removeUnusedKeywords(List<KeywordWithSentences> keywordWithSentenceses){
+        for (Section section: sections){
+
+        }
+    }
+
     private void removeDuplicateSentences(List<KeywordWithSentences> keywordWithSentencesList) {
         for (KeywordWithSentences keywordWithSentences: keywordWithSentencesList) {
+            keywordWithSentences.getSentenceList()
 
         }
     }
@@ -125,4 +134,5 @@ public class Parser {
                     + " : " + keywordWithSentences.getSentenceList().get(0).getText());
         }
     }
+
 }
