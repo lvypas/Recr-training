@@ -23,7 +23,7 @@ public class Parser {
 
         // add synonyms
         Synonym sn1 = new Synonym("companies");
-        Synonym sn2 = new Synonym("development");
+        Synonym sn2 = new Synonym("programmer");
         Synonym sn3 = new Synonym("learning");
         synonyms = Arrays.asList(sn1, sn2, sn3);
 
@@ -45,14 +45,52 @@ public class Parser {
         Section descriptionSection = new Section("Description", 2, Arrays.asList(kw1, kw2, kw3));
         Section responsibilitySection = new Section("Responsibilities", 1, Arrays.asList(kw4, kw5));
         Section requirementSection = new Section("Requirements", 3, Arrays.asList(kw6, kw7, kw8, kw9));
-        sections = Arrays.asList(descriptionSection, requirementSection, requirementSection);
+        sections = Arrays.asList(descriptionSection, responsibilitySection, requirementSection);
     }
 
 
     public void parseJobDescription(){
         // get sentences into array of strings
         String[] sentences = getSentences(readFile(fileName));
+
         // populate keyword with sentences object
+        List<KeywordWithSentences> keywordWithSentencesList = getKeywordWithSentenceses(sentences);
+
+        // sort list
+        Collections.sort(keywordWithSentencesList);
+        Collections.reverse(keywordWithSentencesList);
+
+        //get top keywords
+        List<KeywordWithSentences> onlyTopKeywords = getTopKeywords(keywordWithSentencesList);
+
+        Collections.sort(onlyTopKeywords);
+
+        //remove duplicated sentences that already reserved for another keyword
+        removeDuplicateSentences(onlyTopKeywords);
+
+        Collections.reverse(onlyTopKeywords);
+
+        // print results
+        printKeywordWithSentence(onlyTopKeywords);
+    }
+
+    private String readFile(String file) {
+        String content = null;
+        try {
+            content = Files.toString(new File(file), Charsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String result = new String(content.replaceAll("[\n\r]", ""));
+        return result;
+    }
+
+    private String[] getSentences(String fileAsString){
+        String[] sentences = fileAsString.split("[\\.\\!\\?]");
+        return  sentences;
+    }
+
+    private List<KeywordWithSentences> getKeywordWithSentenceses(String[] sentences) {
         List<KeywordWithSentences> keywordWithSentencesList = new ArrayList<KeywordWithSentences>();
         for (Keyword keyword: keywords) {
             KeywordWithSentences keywordWithSentences = new KeywordWithSentences();
@@ -67,31 +105,7 @@ public class Parser {
             keywordWithSentences.setSentenceList(sentenceList);
             if (keywordWithSentences.getCount() > 0) keywordWithSentencesList.add(keywordWithSentences);
         }
-        // sort list by ascending
-        Collections.sort(keywordWithSentencesList);
-
-        //remove duplicated sentences that already reserved for another keyword
-        removeDuplicateSentences(keywordWithSentencesList);
-
-        Collections.reverse(keywordWithSentencesList);
-
-        // print results
-        printKeywordWithSentence(keywordWithSentencesList);
-    }
-
-    private String readFile(String file) {
-        String content = null;
-        try {
-            content = Files.toString(new File(file), Charsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return content;
-    }
-
-    private String[] getSentences(String fileAsString){
-        String[] sentences = fileAsString.split("[\\.\\!\\?]");
-        return  sentences;
+        return keywordWithSentencesList;
     }
 
     private Integer countKeywordsInSentence(Keyword keyword, String sentence) {
@@ -115,23 +129,43 @@ public class Parser {
         return  count;
     }
 
-    private void removeUnusedKeywords(List<KeywordWithSentences> keywordWithSentenceses){
+    private List<KeywordWithSentences> getTopKeywords(List<KeywordWithSentences> keywordWithSentenceses){
+        List<KeywordWithSentences> resultList = new ArrayList<KeywordWithSentences>();
         for (Section section: sections){
-
+            Integer topKeywords = section.getTopKeywords();
+            for (KeywordWithSentences keywordWithSentences: keywordWithSentenceses){
+                if (section.getListKeywords().contains(keywordWithSentences.getKeyword()) && topKeywords > 0 ) {
+                    resultList.add(keywordWithSentences);
+                    topKeywords--;
+                }
+            }
         }
+        return resultList;
     }
 
     private void removeDuplicateSentences(List<KeywordWithSentences> keywordWithSentencesList) {
-        for (KeywordWithSentences keywordWithSentences: keywordWithSentencesList) {
-            keywordWithSentences.getSentenceList()
-
+        for (int i = 0; i < keywordWithSentencesList.size(); i++) {
+            List<Sentence> sentenceList = keywordWithSentencesList.get(i).getSentenceList();
+            if (!sentenceList.isEmpty()) {
+                for (Sentence sentence: sentenceList) {
+                    for (int j = i + 1; j < keywordWithSentencesList.size(); j++) {
+                        keywordWithSentencesList.get(j).getSentenceList().remove(sentence);
+                    }
+                }
+            }
         }
     }
 
     private void printKeywordWithSentence (List<KeywordWithSentences> keywordWithSentencesList) {
-        for (KeywordWithSentences keywordWithSentences: keywordWithSentencesList) {
-            System.out.println(keywordWithSentences.getKeyword().getWord() + " : " + keywordWithSentences.getCount()
-                    + " : " + keywordWithSentences.getSentenceList().get(0).getText());
+        for (Section section : sections) {
+            System.out.println(section.getName());
+            for (KeywordWithSentences keywordWithSentences: keywordWithSentencesList) {
+                if (section.getListKeywords().contains(keywordWithSentences.getKeyword())) {
+                    System.out.println(keywordWithSentences.getKeyword().getWord() + " : " + keywordWithSentences.getCount()
+                            + " : " + keywordWithSentences.getSentenceList().get(0).getText());
+                }
+            }
+            System.out.println();
         }
     }
 
